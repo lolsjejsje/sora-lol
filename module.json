@@ -11,7 +11,7 @@
   "quality":        "720p",
   "baseUrl":        "https://watchhentai.net",
   "searchBaseUrl":  "https://watchhentai.net/?s=%s",
-  "scriptUrl":      "https://cdn.jsdelivr.net/gh/lolsjejsje/sora-lol@main/watchhentai.js",
+  "scriptUrl":      "https://raw.githubusercontent.com/lolsjejsje/sora-lol/main/watchhentai.js",
   "asyncJS":        false,
   "streamAsyncJS":  false,
   "softsub":        false,
