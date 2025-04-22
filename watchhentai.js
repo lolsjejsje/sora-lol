@@ -19,13 +19,30 @@ function extractDetails(html) {
 
 // 3) extractEpisodes(html) — returns [{ href, number }]
 function extractEpisodes(html) {
-  const listHtml = (html.match(/<ul class="episodios">([\s\S]*?)<\/ul>/) || [,''])[1];
-  const lis      = listHtml.match(/<li[\s\S]*?<\/li>/g) || [];
-  return lis.map(li => {
-    const m = li.match(/<a href="([^"]+)"[^>]*>(?:Episode\s*)?(\d+)<\/a>/i);
-    return m && { href: m[1].trim(), number: m[2] };
-  }).filter(x => x);
+  const eps = [];
+  // grab everything between <ul class="episodios"> and </ul>
+  const ulMatch = html.match(/<ul class="episodios">([\s\S]*?)<\/ul>/);
+  if (!ulMatch) return eps;
+
+  // find each <li>…</li>
+  const items = ulMatch[1].match(/<li[\s\S]*?<\/li>/g) || [];
+  items.forEach(li => {
+    // pull href from the <a>…
+    const hrefMatch   = li.match(/<a href="([^"]+)"/);
+    // pull the episode number from “>Episode 1<”
+    const numberMatch = li.match(/>(?:Episode\s*)?(\d+)</i);
+
+    if (hrefMatch && numberMatch) {
+      eps.push({
+        href:   hrefMatch[1].trim(),
+        number: numberMatch[1]
+      });
+    }
+  });
+
+  return eps;
 }
+
 
 // 4) extractStreamUrl(html) — returns the iframe’s src
 function extractStreamUrl(html) {
