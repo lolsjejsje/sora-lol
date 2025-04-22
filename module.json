@@ -1,19 +1,19 @@
 {
-  "sourceName":  "WatchHentai",
-  "iconUrl":     "https://watchhentai.net/favicon.ico",
+  "sourceName":     "WatchHentai",
+  "iconUrl":        "https://watchhentai.net/favicon.ico",
   "author": {
-    "name": "Anonymous",
-    "icon": "https://watchhentai.net/favicon.ico"
+    "name":         "Anonymous",
+    "icon":         "https://watchhentai.net/favicon.ico"
   },
-  "version":    "1.0.1",
-  "language":   "English",
-  "streamType": "MP4",
-  "quality":    "720p",
-  "baseUrl":    "https://watchhentai.net",
-  "searchBaseUrl": "https://watchhentai.net/?s=%s",
-  "scriptUrl":    "https://raw.githubusercontent.com/lolsjejsje/sora-lol/main/watchhentai.js",
-  "asyncJS":      false,
-  "streamAsyncJS": false,
-  "softsub":      false,
-  "type":         "anime"
+  "version":        "1.0.2",
+  "language":       "English",
+  "streamType":     "MP4",
+  "quality":        "720p",
+  "baseUrl":        "https://watchhentai.net",
+  "searchBaseUrl":  "https://watchhentai.net/?s=%s",
+  "scriptUrl":      "https://raw.githubusercontent.com/lolsjejsje/sora-lol/main/watchhentai.js",
+  "asyncJS":        false,
+  "streamAsyncJS":  false,
+  "softsub":        false,
+  "type":           "anime"
 }
