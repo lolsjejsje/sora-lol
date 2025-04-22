@@ -1,22 +1,3 @@
-// 1) searchResults(html) — returns [{ title, image, href }]
-function searchResults(html) {
-  const items = html.match(/<div class="result-item">[\s\S]*?<\/article>/g) || [];
-  return items.map(item => {
-    const href  = (item.match(/<div class="thumbnail[\s\S]*?<a href="([^"]+)"/)    || [,''])[1].trim();
-    const title = (item.match(/<div class="title">[\s\S]*?<a[^>]*>([^<]+)<\/a>/) || [,''])[1].trim();
-    const image = (item.match(/<img[^>]+src="([^"]+)"/)                           || [,''])[1].trim();
-    return { title, image, href };
-  });
-}
-
-// 2) extractDetails(html) — returns { description, aliases, airdate }
-function extractDetails(html) {
-  const description = (html.match(/<div class="contenido">[\s\S]*?<p>([\s\S]*?)<\/p>/) || [,''])[1].trim();
-  // WatchHentai doesn’t expose an “alternative title” field, so leave aliases null
-  const airdate     = (html.match(/<div class="meta">[\s\S]*?<span class="year">([^<]+)<\/span>/) || [,''])[1].trim();
-  return { description, aliases: null, airdate };
-}
-
 function extractEpisodes(html) {
   const eps = [];
 
@@ -46,13 +27,4 @@ function extractEpisodes(html) {
 
   // 4) Dedupe by href
   return [...new Map(eps.map(e => [e.href, e])).values()];
-}
-
-
-
-
-// 4) extractStreamUrl(html) — returns the iframe’s src
-function extractStreamUrl(html) {
-  const src = (html.match(/<iframe[^>]+src="([^"]+)"/) || [,''])[1];
-  return src.replace(/&amp;/g, '&');  // unescape HTML entities
 }
