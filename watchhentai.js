@@ -1,27 +1,23 @@
 module.exports = {
-  searchResults: ($) => {
-    return $('a:has(img)').map((i, el) => ({
-      title:  $(el).find('img').attr('title').trim(),
-      href:   $(el).attr('href'),
-      image:  $(el).find('img').attr('src')
-    })).get();
-  },
+  searchResults: ($) => $('div.thumbnail').map((i, el) => {
+    const a = $(el).find('a');
+    return {
+      title:  a.find('img').attr('alt').trim(),
+      href:   a.attr('href'),
+      image:  a.find('img').attr('src')
+    };
+  }).get(),
 
   extractDetails: ($) => ({
-    description: $('div#description').text().trim(),
-    aliases:     null,  // watchhentai doesn’t provide aliases
-    airdate:     null   // or you can scrape a “Year:” field if present
+    description: $('div#description, div.entry-content p').first().text().trim() || '',
+    aliases:     null,
+    airdate:     $('li:contains("First air date")').text().replace('First air date', '').trim() || null
   }),
 
-  extractEpisodes: ($) => {
-    return $('ul.episodes li').map((i, el) => ({
-      href:  $(el).find('a').attr('href'),
-      number: $(el).find('a').text().trim().match(/\d+/)[0]
-    })).get();
-  },
+  extractEpisodes: ($) => $('ul.episodes-list li a').map((i, el) => ({
+    href:   $(el).attr('href'),
+    number: $(el).text().trim().match(/\d+/)[0]
+  })).get(),
 
-  extractStreamUrl: ($) => {
-    // most videos are in an <iframe>
-    return $('iframe').attr('src');
-  }
+  extractStreamUrl: ($) => $('iframe').attr('src') || ''
 };
