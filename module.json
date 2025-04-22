@@ -1,0 +1,17 @@
+{
+    "sourceName": "WatchHentai",
+    "iconUrl": "https://watchhentai.net/favicon.ico",
+    "author": {
+        "name": "Anonymous",
+        "icon": "https://watchhentai.net/favicon.ico"
+    },
+    "version": 1,
+    "language": "English",
+    "streamType": "MP4",
+    "quality": "720p",
+    "baseUrl": "https://watchhentai.net/",
+    "searchBaseUrl": "https://watchhentai.net/search/%s",
+    "scriptUrl": "https://raw.githubusercontent.com/YOUR_USERNAME/sora-watchhentai/main/watchhentai.js",
+    "asyncJS": false
+ }
+ 
