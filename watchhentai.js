@@ -20,28 +20,33 @@ function extractDetails(html) {
 // 3) extractEpisodes(html) — returns [{ href, number }]
 function extractEpisodes(html) {
   const eps = [];
-  // grab everything between <ul class="episodios"> and </ul>
-  const ulMatch = html.match(/<ul class="episodios">([\s\S]*?)<\/ul>/);
-  if (!ulMatch) return eps;
 
-  // find each <li>…</li>
-  const items = ulMatch[1].match(/<li[\s\S]*?<\/li>/g) || [];
-  items.forEach(li => {
-    // pull href from the <a>…
-    const hrefMatch   = li.match(/<a href="([^"]+)"/);
-    // pull the episode number from “>Episode 1<”
-    const numberMatch = li.match(/>(?:Episode\s*)?(\d+)</i);
+  // 1) match the <ul> with class “episodios”, allowing other attributes
+  const ulMatch = html.match(/<ul[^>]*class="[^"]*episodios[^"]*"[^>]*>([\s\S]*?)<\/ul>/i);
+  if (ulMatch) {
+    // grab each <li>…</li> inside that block
+    const items = ulMatch[1].match(/<li[\s\S]*?<\/li>/g) || [];
+    items.forEach(li => {
+      const hrefM   = li.match(/<a\s+href="([^"]+)"/i);
+      const numM    = li.match(/>(?:Episode\s*)?(\d+)</i);
+      if (hrefM && numM) {
+        eps.push({ href: hrefM[1].trim(), number: numM[1] });
+      }
+    });
+  }
 
-    if (hrefMatch && numberMatch) {
-      eps.push({
-        href:   hrefMatch[1].trim(),
-        number: numberMatch[1]
-      });
+  // 2) fallback: scan for any “videos/...-episode-#/” links on the page
+  if (!eps.length) {
+    let m;
+    const linkRe = /<a\s+href="([^"]+videos\/[^"]+episode-(\d+)\/)"/gi;
+    while ((m = linkRe.exec(html))) {
+      eps.push({ href: m[1], number: m[2] });
     }
-  });
+  }
 
   return eps;
 }
+
 
 
 // 4) extractStreamUrl(html) — returns the iframe’s src
