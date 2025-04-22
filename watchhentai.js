@@ -21,31 +21,34 @@ function extractDetails(html) {
 function extractEpisodes(html) {
   const eps = [];
 
-  // 1) match the <ul> with class “episodios”, allowing other attributes
-  const ulMatch = html.match(/<ul[^>]*class="[^"]*episodios[^"]*"[^>]*>([\s\S]*?)<\/ul>/i);
+  // 1) Match the <ul class="episodios">…</ul>
+  const ulMatch = html.match(
+    /<ul[^>]*class="[^"]*episodios[^"]*"[^>]*>([\s\S]*?)<\/ul>/i
+  );
   if (ulMatch) {
-    // grab each <li>…</li> inside that block
-    const items = ulMatch[1].match(/<li[\s\S]*?<\/li>/g) || [];
-    items.forEach(li => {
-      const hrefM   = li.match(/<a\s+href="([^"]+)"/i);
-      const numM    = li.match(/>(?:Episode\s*)?(\d+)</i);
-      if (hrefM && numM) {
-        eps.push({ href: hrefM[1].trim(), number: numM[1] });
-      }
-    });
-  }
+    const listHtml = ulMatch[1];
 
-  // 2) fallback: scan for any “videos/...-episode-#/” links on the page
-  if (!eps.length) {
+    // 2) Pull href & number in one shot
+    const liRe = /<li[\s\S]*?>[\s\S]*?<a[^>]+href="([^"]+)"[^>]*>(?:\s*Episode\s*)?(\d+)[\s\S]*?<\/a>/gi;
     let m;
-    const linkRe = /<a\s+href="([^"]+videos\/[^"]+episode-(\d+)\/)"/gi;
-    while ((m = linkRe.exec(html))) {
-      eps.push({ href: m[1], number: m[2] });
+    while ((m = liRe.exec(listHtml))) {
+      eps.push({ href: m[1].trim(), number: m[2] });
     }
   }
 
-  return eps;
+  // 3) Fallback: any “/videos/...-episode-#/” links site‑wide
+  if (!eps.length) {
+    const linkRe = /<a\s+href="([^"]+\/videos\/[^"]+-episode-(\d+)\/)"/gi;
+    let m2;
+    while ((m2 = linkRe.exec(html))) {
+      eps.push({ href: m2[1], number: m2[2] });
+    }
+  }
+
+  // 4) Dedupe by href
+  return [...new Map(eps.map(e => [e.href, e])).values()];
 }
+
 
 
 
